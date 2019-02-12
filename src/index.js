@@ -54,7 +54,6 @@ const returnFnResult = fn => fn();
    console.log(f()); // выведет 13
  */
 const returnCounter = (number = 0) => () => number++;
-
 /*
  Задание 5 *:
 
@@ -65,15 +64,8 @@ const returnCounter = (number = 0) => () => number++;
    returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
  */
 function returnArgumentsArray() {
-    let arg = [];
-
-    for (let i = 0; i < arguments.length; ++i) {
-        arg.push(arguments[i]);
-    }
-
-    return arg;
+    return [...arguments];
 }
-
 /*
  Задание 6 *:
 
@@ -89,7 +81,14 @@ function returnArgumentsArray() {
 
    console.log(newSum()) выведет 6
  */
-const bindFunction = (fn, ...args) => fn(...args);
+
+function bindFunction(fn) {
+    let arg = [...arguments];
+
+    return fn.apply(this, arg.slice(1));
+}
+
+/*
 
 export {
     returnFirstArgument,
@@ -98,4 +97,4 @@ export {
     returnFnResult,
     returnCounter,
     bindFunction
-}
+}*/
