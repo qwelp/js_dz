@@ -19,6 +19,9 @@ function forEach(array, fn) {
  Посмотрите как работает map и повторите это поведение для массива, который будет передан в параметре array
  */
 function map(array, fn) {
+    for (let i = 0; i < array.length; i++) {
+        fn(array[i]);
+    }
 }
 
 /*
@@ -28,6 +31,9 @@ function map(array, fn) {
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
 function reduce(array, fn, initial) {
+    for (let i = 0; i < array.length; i++) {
+        fn(initial, array[i]);
+    }
 }
 
 /*
@@ -39,6 +45,13 @@ function reduce(array, fn, initial) {
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
 function upperProps(obj) {
+    let arrKey = [];
+
+    for (let key in obj) {
+        arrKey.push(key.toUpperCase());
+    }
+
+    return arrKey;
 }
 
 /*
@@ -47,7 +60,14 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
-function slice(array, from, to) {
+function slice(array, from, to = array.length) {
+    let neewArr = [];
+
+    for (let i = from; i < to; i++) {
+        neewArr.push(array[i]);
+    }
+
+    return neewArr;
 }
 
 /*
@@ -56,8 +76,23 @@ function slice(array, from, to) {
  Функция принимает объект и должна вернуть Proxy для этого объекта
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
-function createProxy(obj) {
+function createProxy(obj = {}) {
+
+    let p = new Proxy(obj, {
+        set: function(target, prop, value) {
+            target[prop] = Math.pow(value, 2);
+
+            return true;
+        }
+    });
+
+    p.one = 1;
+    p.two = 2;
+    p.three = 3;
 }
+
+createProxy();
+
 /*
 
 export {
