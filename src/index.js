@@ -85,7 +85,9 @@ function returnArgumentsArray() {
 function bindFunction(fn) {
     let arg = [...arguments];
 
-    return fn.apply(this, arg.slice(1));
+    arg.shift();
+
+    return fn.apply(this, arg);
 }
 
 /*
