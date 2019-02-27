@@ -19,9 +19,13 @@ function forEach(array, fn) {
  Посмотрите как работает map и повторите это поведение для массива, который будет передан в параметре array
  */
 function map(array, fn) {
+    var newArr = [];
+
     for (let i = 0; i < array.length; i++) {
-        fn(array[i]);
+        newArr.push(fn(array[i], i, array));
     }
+
+    return newArr;
 }
 
 /*
@@ -30,13 +34,32 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
+
 function reduce(array, fn, initial) {
-    for (let i = 0; i < array.length; i++) {
-        fn(initial, array[i]);
+    let int = 0,
+        prev = 0;
+
+    if (initial) {
+        prev = initial;
     }
+
+    for (let i = 0; i < array.length; i++) {
+
+        if (!initial && i === 0) {
+            prev = array[i];
+            continue;
+        }
+
+        int = fn(prev, array[i], i, array);
+
+        prev = int;
+    }
+
+    return int;
 }
 
 /*
+
  Задание 4:
 
  Функция должна перебрать все свойства объекта, преобразовать их имена в верхний регистр и вернуть в виде массива
@@ -60,14 +83,89 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
-function slice(array, from, to = array.length) {
-    let neewArr = [];
+function slice(array, from, to) {
+    let newArr = [],
+        total = 0;
 
-    for (let i = from; i < to; i++) {
-        neewArr.push(array[i]);
+    if (from === 0 && to === 0) {
+        return [];
     }
 
-    return neewArr;
+    if (!from && !to) {
+        return array;
+    }
+
+    if (from === 0 && !to) {
+
+        for (let i = 0; i < array.length; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from === 0 && from <= array.length && to > 0 && to < array.length) {
+        for (let i = from; i < to; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from === 0 && from <= array.length && to < 0) {
+        to = -to;
+        total = array.length - to;
+
+        for (let i = from; i < total; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from > 0 && from <= array.length && !to) {
+        for (let i = from; i < array.length; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from > 0 && to > array.length) {
+        for (let i = from; i < array.length; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from > 0 && from <= array.length && to > 0 && to <= array.length) {
+        for (let i = from; i < array.length; i++) {
+
+            if (to === i) {
+                break;
+            }
+
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from < 0 && !to) {
+        for (let i = 0; i < array.length; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from < 0 && to > 0) {
+
+        total = to;
+
+        for (let i = 0; i < total; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    if (from < 0 && to < 0) {
+
+        to = - to;
+        total = to - 1;
+
+        for (let i = 0; i < total; i++) {
+            newArr.push(array[i]);
+        }
+    }
+
+    return newArr;
 }
 
 /*
@@ -78,22 +176,14 @@ function slice(array, from, to = array.length) {
  */
 function createProxy(obj = {}) {
 
-    let p = new Proxy(obj, {
-        set: function(target, prop, value) {
-            target[prop] = Math.pow(value, 2);
-
-            return true;
+    let validator = {
+        set: function(obj, prop, value) {
+            obj[prop] = value * value;
         }
-    });
+    };
 
-    p.one = 1;
-    p.two = 2;
-    p.three = 3;
+    return new Proxy(obj, validator);
 }
-
-createProxy();
-
-/*
 
 export {
     forEach,
@@ -103,4 +193,3 @@ export {
     slice,
     createProxy
 };
-*/
