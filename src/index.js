@@ -185,6 +185,14 @@ function createProxy(obj = {}) {
     return new Proxy(obj, validator);
 }
 
+let obj = createProxy({});
+
+obj.one = 1;
+obj.two = 4;
+obj.three = 3;
+
+console.log(obj);
+
 export {
     forEach,
     map,
