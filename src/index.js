@@ -16,7 +16,26 @@
    isAllTrue([1, 2, 3, 4, 5], n => n < 10) // вернет true
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
+// array instanceof Array === false
+
 function isAllTrue(array, fn) {
+
+    if (array instanceof Array === false || array.length === 0) {
+        throw new Error("empty array");
+    }
+
+    if (typeof fn !== 'function') {
+        throw new Error("fn is not a function");
+    }
+
+    for (let i = 0; i < array.length; i++) {
+        if (!fn(array[i])) {
+            return false;
+        }
+    }
+
+    return true;
+
 }
 
 /*
@@ -36,6 +55,22 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
+
+    if (array instanceof Array === false || array.length === 0) {
+        throw new Error('empty array');
+    }
+
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    for (let i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /*
@@ -49,8 +84,22 @@ function isSomeTrue(array, fn) {
  3.3: Необходимо выбрасывать исключение в случаях:
    - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn) {
+function returnBadArguments(fn, ...arg) {
+    let arError = [];
 
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    for (let i = 0; i < arg.length; i++) {
+        try {
+            fn(arg[i]);
+        } catch (e) {
+            arError.push(arg[i]);
+        }
+    }
+
+    return arError;
 }
 
 /*
@@ -70,8 +119,70 @@ function returnBadArguments(fn) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
-    
+function calculator(n = 0) {
+
+    if (typeof(n) !== 'number') {
+        throw new Error('number is not a number');
+    }
+
+    return {
+        sum : function (...arg) {
+            let summ = 0;
+
+            for (let i = 0; i < arg.length; i++) {
+                summ += arg[i];
+            }
+
+            return n + summ;
+
+        },
+        dif : function (...arg) {
+            let summ = 0;
+
+            for (let i = 0; i < arg.length; i++) {
+                summ += arg[i];
+            }
+
+            return n - summ;
+        },
+        div : function (...arg) {
+            let zero = true,
+                summ = 0;
+
+            for (let i = 0; i < arg.length; i++) {
+                if (arg[i] === 0) {
+                    zero = false;
+                }
+            }
+
+            if (n === 0 || !zero) {
+                throw new Error('division by 0');
+            }
+
+            for (let i = 0; i < arg.length; i++) {
+                if (i === 0) {
+                    summ = n / arg[i];
+                } else {
+                    summ /= arg[i];
+                }
+            }
+
+            return summ;
+        },
+        mul : function (...arg) {
+            let summ = 0;
+
+            for (let i = 0; i < arg.length; i++) {
+                if (i === 0) {
+                    summ = n * arg[i];
+                } else {
+                    summ *= arg[i];
+                }
+            }
+
+            return summ;
+        }
+    };
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
