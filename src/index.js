@@ -11,6 +11,9 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div;
 }
 
 /*
@@ -22,6 +25,7 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
+    where.prepend(what);
 }
 
 /*
@@ -44,6 +48,17 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+    let arr = [],
+        array = where.children;
+
+    for (let i = 0; i < array.length - 1; i++) {
+
+        if (array[i].nextElementSibling.tagName === 'P') {
+            arr.push(array[i]);
+        }
+    }
+
+    return arr;
 }
 
 /*
@@ -66,12 +81,14 @@ function findAllPSiblings(where) {
 function findError(where) {
     var result = [];
 
-    for (var child of where.childNodes) {
+    for (var child of where.children) {
         result.push(child.innerText);
     }
 
     return result;
 }
+
+findError(document.body);
 
 /*
  Задание 5:
@@ -86,6 +103,13 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+    var result = [];
+
+    for (var child of where.childNodes) {
+        child.textContent = '';
+    }
+
+    return result;
 }
 
 /*
@@ -100,6 +124,21 @@ function deleteTextNodes(where) {
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    let result = [];
+
+    for (var child of where.childNodes) {
+
+        if (child.nodeType === 3) {
+            result.push(child.textContent);
+            child.textContent = '';
+        }
+
+        if (child.nodeType === 1) {
+            deleteTextNodesRecursive(child);
+        }
+    }
+
+    return result;
 }
 
 /*
@@ -122,7 +161,52 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {
+
+function collectDOMStat(root, obj= {}) {
+
+    for (let child of root.childNodes) {
+        if (child.nodeType === 3) {
+            if ('texts' in obj) {
+                obj.texts = obj.texts + 1;
+            } else {
+                obj.texts = 1;
+            }
+        } else {
+
+            if (obj.classes === undefined) {
+                obj.classes = {};
+            }
+
+            if (obj.tags === undefined) {
+                obj.tags = {};
+            }
+
+            let tName = child.tagName;
+
+            if (tName in obj.tags) {
+                obj.tags[tName] = obj.tags[tName] + 1;
+            } else {
+                obj.tags[tName] = 1;
+            }
+
+            let cName = child.classList;
+
+            for (let name of cName) {
+                if (name in obj.classes) {
+                    obj.classes[name] = obj.classes[name] + 1;
+                } else {
+                    obj.classes[name] = 1;
+                }
+            }
+        }
+
+        if (child.childNodes.length > 0) {
+            collectDOMStat(child, obj);
+        }
+
+    }
+
+    return obj;
 }
 
 /*
@@ -157,8 +241,32 @@ function collectDOMStat(root) {
      nodes: [div]
    }
  */
+
 function observeChildNodes(where, fn) {
-} 
+    var observer = new MutationObserver(function (mutations) {
+
+        mutations.forEach(function (mutation) {
+
+            if (mutation.addedNodes.length > 0) {
+                fn({
+                    type: 'insert',
+                    nodes: [...mutation.addedNodes]
+                });
+            }
+
+            if (mutation.removedNodes.length > 0) {
+                fn({
+                    type: 'remove',
+                    nodes: [...mutation.removedNodes]
+                });
+            }
+        });
+    });
+
+    var config = { attributes: true, childList: true, characterData: true };
+
+    observer.observe(where, config);
+}
 
 export {
     createDivWithText,
