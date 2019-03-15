@@ -38,7 +38,10 @@ const homeworkContainer = document.querySelector('#homework-container');
  */
 let loadTowns = () => {
     let url = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
-    return fetch(url).then(response => response.json());
+    return fetch(url).then(response => response.json()).then(response => response.sort((a, b) => {
+        if ( a.name < b.name ) return -1;
+        if ( a.name < b.name ) return 1;
+    }));
 };
 
 /*
@@ -94,11 +97,9 @@ filterInput.addEventListener('keyup', function() {
             });
 
             filterResult.innerHTML = html;
-        })
-        .then(function () {
-                loadingBlock.style.display = 'none';
-        })
-        .catch(function(error) {
+        }).then(function () {
+            loadingBlock.style.display = 'none';
+        }).catch(function(error) {
 
             console.log('Не удалось загрузить города');
 
