@@ -56,8 +56,8 @@ let loadTowns = () => {
    isMatching('Moscow', 'Moscov') // false
  */
 let isMatching = (full, chunk) => {
-    if (full.toLowerCase().indexOf(chunk) === 0) {
-        return true
+    if (full.toLowerCase().indexOf(chunk.toLowerCase()) >= 0) {
+        return true;
     } else {
         return false;
     }
@@ -72,7 +72,7 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function() {
+filterInput.addEventListener('keyup', function(e) {
     let inputValue = e.target.value;
 
     if (inputValue === '') {
