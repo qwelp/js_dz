@@ -36,7 +36,7 @@ const homeworkContainer = document.querySelector('#homework-container');
 const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
 // текстовое поле с именем cookie
 const addNameInput = homeworkContainer.querySelector('#add-name-input');
-// текстовое поле со значением cookie 
+// текстовое поле со значением cookie
 const addValueInput = homeworkContainer.querySelector('#add-value-input');
 // кнопка "добавить cookie"
 const addButton = homeworkContainer.querySelector('#add-button');
@@ -102,7 +102,7 @@ const addCookie = () => {
     let items = listTable.children,
         flag = true;
 
-    for (i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         if (items[i].childNodes.length > 0) {
             if (items[i].children[0].textContent === addNameInput.value
                 && itemsCookie()[items[i].children[0].textContent] !== addValueInput.value)
