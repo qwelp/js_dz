@@ -75,7 +75,7 @@ const itemsList = () => {
 
     for (let item in cookieList()) {
         if (item.length > 0) {
-            listTable.innerHTML += `<tr><td>${item}</td><td>${cookieList()[item]}</td><td><a class="delete" data-name="${item}" href="#">Удалить</a></td></tr>`;
+            listTable.innerHTML += `<tr><td>${item}</td><td>${cookieList()[item]}</td><td><button class="delete" data-name="${item}">Удалить</button></td></tr>`;
         }
     }
 };
@@ -83,8 +83,10 @@ const itemsList = () => {
 const cookieAdd = () => {
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
 
-    addNameInput.value = '';
-    addValueInput.value = '';
+    setTimeout(function () {
+        addNameInput.value = '';
+        addValueInput.value = '';
+    }, 100);
 };
 
 const isMatching = (full, chunk) => {
@@ -108,7 +110,7 @@ const filter = () => {
     listTable.innerHTML = '';
 
     for (let key in obj) {
-        listTable.innerHTML += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete" data-name="${key}" href="#">Удалить</a></td></tr>`;
+        listTable.innerHTML += `<tr><td>${key}</td><td>${items[key]}</td><td><button class="delete" data-name="${key}">Удалить</button></td></tr>`;
     }
 };
 
