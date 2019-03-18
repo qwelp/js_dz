@@ -108,9 +108,6 @@ const filter = () => {
     listTable.innerHTML = '';
 
     for (let key in obj) {
-
-        console.log(key);
-
         listTable.innerHTML += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete" data-name="${key}" href="#">Удалить</a></td></tr>`;
     }
 };
