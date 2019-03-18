@@ -43,122 +43,48 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('keyup', function(e) {
-    const inputValue = e.target.value;
-
-    let
-        items = itemsCookie(),
-        htmlTr = '',
-        obj = {};
-
-    for (let item in items) {
-        if (isMatching(item, inputValue) || isMatching(items[item], inputValue)) {
-            obj[item] = items[item];
-        }
-    }
-
-    listTable.innerHTML = '';
-
-    for (let key in obj) {
-        htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td><tr>`;
-    }
-
-    listTable.innerHTML = htmlTr;
+filterNameInput.addEventListener('keyup', function() {
+    filter();
 });
 
-const itemsCookie = () => {
+addButton.addEventListener('click', () => {
+    cookieAdd();
 
-    const arCookie = document.cookie.split('; ');
+    if (filterNameInput.value) {
+        filter();
+    } else {
+        itemsList();
+    }
+});
 
-    const objCookie = arCookie.reduce((obj, v) => {
+const cookieList = () => {
 
+    const objCookie = document.cookie.split('; ').reduce((obj, v) => {
         const [name, value] = v.split('=');
 
         obj[name] = value;
 
         return obj;
     }, {});
-
     return objCookie;
 };
 
-const itemsCreateTr_valid = () => {
-    let
-        items = itemsCookie(),
-        htmlTr = '';
-
-    const inputValue = filterNameInput.value;
-    const arCookie = document.cookie.split('; ');
+const itemsList = () => {
 
     listTable.innerHTML = '';
 
-    for (let key in items) {
-        if (isMatching(key, inputValue) || isMatching(items[key], inputValue)) {
-            htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td></tr>`;
+    for (let item in cookieList()) {
+        if (item.length > 0) {
+            listTable.innerHTML += `<tr><td>${item}</td><td>${cookieList()[item]}</td><td><a class="delete" data-name="${item}" href="#">Удалить</a></td></tr>`;
         }
     }
-
-    listTable.innerHTML = htmlTr;
-}
-
-const itemsCreateTr = () => {
-
-    let
-        items = itemsCookie(),
-        htmlTr = '';
-
-    const arCookie = document.cookie.split('; ');
-
-    listTable.innerHTML = '';
-
-    if (arCookie.length === 1 && arCookie[0] === "") {
-
-    } else {
-        for (let key in items) {
-            htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td></tr>`;
-        }
-    }
-
-    listTable.innerHTML = htmlTr;
 };
 
-const addCookie = () => {
-
-    let items = listTable.children,
-        flag = true;
-
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].childNodes.length > 0) {
-            if (items[i].children[0].textContent === addNameInput.value
-                && itemsCookie()[items[i].children[0].textContent] !== addValueInput.value)
-            {
-                if (addNameInput.value !== items[i].children[0].textContent) {
-                    items[i].remove();
-                }
-                flag = false;
-            }
-        }
-    }
-
+const cookieAdd = () => {
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-
-    if (filterNameInput.value.length > 0) {
-        flag = false;
-        itemsCreateTr_valid();
-    }
 
     addNameInput.value = '';
     addValueInput.value = '';
-
-    if (flag) {
-        itemsCreateTr();
-    }
-};
-
-const deleteCookie = cookie_name => {
-    const date = new Date ();
-    date.setTime (date.getTime() - 1);
-    document.cookie = cookie_name += "=; expires=" + date.toGMTString();
 };
 
 const isMatching = (full, chunk) => {
@@ -168,21 +94,40 @@ const isMatching = (full, chunk) => {
     return false;
 };
 
+const filter = () => {
+
+    let items = cookieList();
+    let obj = {};
+
+    for (let item in items) {
+        if (isMatching(item, filterNameInput.value) || isMatching(items[item], filterNameInput.value)) {
+            obj[item] = items[item];
+        }
+    }
+
+    listTable.innerHTML = '';
+
+    for (let key in obj) {
+
+        console.log(key);
+
+        listTable.innerHTML += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete" data-name="${key}" href="#">Удалить</a></td></tr>`;
+    }
+};
+
+const deleteCookie = name => {
+    const date = new Date ( );
+    date.setTime (date.getTime() - 1);
+    document.cookie = name += "=; expires=" + date.toGMTString();
+};
+
+itemsList();
+
 document.addEventListener('click', (e) => {
     let target = e.target;
-    if (target.getAttribute('class') === 'delete-cookie') {
-
-        const
-            tr = target.closest('tr'),
-            name = tr.children[0].textContent;
-
+    if (target.getAttribute('class') === 'delete') {
+        let name = target.dataset.name;
         deleteCookie(name);
-        itemsCreateTr();
+        itemsList();
     }
 });
-
-addButton.addEventListener('click', () => {
-    addCookie();
-});
-
-itemsCreateTr();
