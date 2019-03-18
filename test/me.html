@@ -139,7 +139,10 @@
                     if (items[i].children[0].textContent === addNameInput.value
 						&& itemsCookie()[items[i].children[0].textContent] !== addValueInput.value)
                     {
-                        items[i].remove();
+                        if (addNameInput.value !== items[i].children[0].textContent) {
+                            items[i].remove();
+                        }
+
                         flag = false;
 					}
                 }
@@ -153,7 +156,7 @@
             if (flag) {
                 itemsCreateTr();
 			}
-		}
+		};
 
 		const deleteCookie = cookie_name => {
             const date = new Date ( );
@@ -162,6 +165,7 @@
 		};
 
         const isMatching = (full, chunk) => {
+            
             if (full.toLowerCase().indexOf(chunk.toLowerCase()) >= 0) {
                 return true;
             }
