@@ -132,7 +132,9 @@ const addCookie = () => {
             if (items[i].children[0].textContent === addNameInput.value
                 && itemsCookie()[items[i].children[0].textContent] !== addValueInput.value)
             {
-                items[i].remove();
+                if (addNameInput.value !== items[i].children[0].textContent) {
+                    items[i].remove();
+                }
                 flag = false;
             }
         }
