@@ -82,16 +82,41 @@ const itemsCookie = () => {
     return objCookie;
 };
 
+const itemsCreateTr_valid = () => {
+    let
+        items = itemsCookie(),
+        htmlTr = '';
+
+    const inputValue = filterNameInput.value;
+    const arCookie = document.cookie.split('; ');
+
+    listTable.innerHTML = '';
+
+    for (let key in items) {
+        if (isMatching(key, inputValue) || isMatching(items[key], inputValue)) {
+            htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td></tr>`;
+        }
+    }
+
+    listTable.innerHTML = htmlTr;
+}
+
 const itemsCreateTr = () => {
 
     let
         items = itemsCookie(),
         htmlTr = '';
 
+    const arCookie = document.cookie.split('; ');
+
     listTable.innerHTML = '';
 
-    for (let key in items) {
-        htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td></tr>`;
+    if (arCookie.length === 1 && arCookie[0] === "") {
+
+    } else {
+        for (let key in items) {
+            htmlTr += `<tr><td>${key}</td><td>${items[key]}</td><td><a class="delete-cookie" href="#">Удалить</a></td></tr>`;
+        }
     }
 
     listTable.innerHTML = htmlTr;
@@ -115,16 +140,21 @@ const addCookie = () => {
 
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
 
+    if (filterNameInput.value.length > 0) {
+        flag = false;
+        itemsCreateTr_valid();
+    }
+
     addNameInput.value = '';
     addValueInput.value = '';
 
     if (flag) {
         itemsCreateTr();
     }
-}
+};
 
 const deleteCookie = cookie_name => {
-    const date = new Date ( );
+    const date = new Date ();
     date.setTime (date.getTime() - 1);
     document.cookie = cookie_name += "=; expires=" + date.toGMTString();
 };
