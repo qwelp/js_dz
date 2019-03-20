@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="https://api-maps.yandex.ru/2.1/?apikey=39af5b7a-7cdc-4955-8d7b-44c741083d9c&lang=ru_RU" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="popup">
+	<div class="popup__close"><img src="images/close.png" height="14" width="14"/></div>
+	<div class="popup__title">
+		<div class="popup__title__col"><img class="popup__title__img" src="images/marker.png" height="14" width="8"/></div>
+		<div class="popup__title__col" id="title"></div>
+	</div>
+	<div class="popupWrap">
+		<div class="popupWrapItems__info">Отзывов пока нет...</div>
+		<ul class="popupWrapItems">
+
+		</ul>
+	</div>
+	<div class="popupForm">
+		<div class="popupForm__title">ВАШ ОТЗЫВ</div>
+		<form class="popupForm__form" action="">
+			<div class="popupForm__row">
+				<div class="popupFormInput">
+					<input type="text" class="popupFormInput__text" id="name" placeholder="Ваше имя">
+				</div>
+			</div>
+			<div class="popupForm__row">
+				<div class="popupFormInput">
+					<input type="text" class="popupFormInput__text" id="address" placeholder="Укажите место">
+				</div>
+			</div>
+			<div class="popupForm__row">
+				<div class="popupFormInput">
+					<textarea class="popupFormInput__textarea" id="text" placeholder="Поделитесь впечатлениями"></textarea>
+				</div>
+			</div>
+			<div class="popupForm__row popupForm__row-right">
+				<button class="addText" id="addText">Добавить</button>
+			</div>
+			<input type="hidden" id="coords">
+		</form>
+	</div>
+</div>
+<input type="hidden" id="pos_x" value="1">
+<input type="hidden" id="pos_y" value="2">
+
+<div id="map"></div>
+
+<script src="index.js"></script>
+</body>
+</html>
